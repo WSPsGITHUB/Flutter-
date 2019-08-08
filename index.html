@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+
+    <!-- 透過 CDN (Content Delivery Network) 的方式將jq加入 -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="./jquery.toast.css">
+
+
+    <!-- 加入fontawesome連結 -->
+    <!--此連結對應第5版-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+
+
+    <!-- bootstrap所需 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+
+
+    <style>
+        * {
+            font-family: 微軟正黑體;
+        }
+
+        body {
+            background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.5)), url("img/bg02.jpg");
+            background-size: 100%;
+            background-repeat: repeat;
+            background-position: center;
+        }
+
+        nav {
+            box-shadow: 0px 1px 6px 1px black;
+            margin-bottom: 35px;
+        }
+
+
+        button.navbar-toggler {
+            color: rgb(21, 125, 223);
+        }
+        button.navbar-toggler:hover {
+            color: green;
+            box-shadow: 0px 0px 5px 5px rgba(159, 235, 235, 1);
+        }
+        button.navbar-toggler:active {
+            color: red;
+        }
+
+
+        .navbar-brand:hover,  a.nav-item.nav-link:hover {
+            color: green;
+            box-shadow: 0px 0px 5px 5px rgba(159, 235, 235, 1);
+        }
+        .navbar-brand:active,  a.nav-item.nav-link:active {
+            color: red;
+        }
+
+        
+
+        section {
+            padding: 15px;     margin: 60px 10px;
+            box-shadow: 0px 1px 6px 1px black;
+            border-radius: 20px;
+            background: rgb(221, 218, 218, 0.5);
+            /*背景調淡*/
+        }
+
+        img.img-fluid {
+            position: relative;  margin: auto;
+            width: 520px;    height: 300px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.75);
+        }
+        img.img-fluid:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 0px 5px 5px rgba(159, 235, 235, 1);
+           
+        }
+
+
+        footer.jumbotron {
+            text-align: center;
+            box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.75);
+            margin: 0px 10px;
+            background-image: url(img/bg03.jpg);
+            background-size: cover;
+            background-attachment: fixed;       
+        }
+
+        footer.jumbotron input {
+            background-color: rgb(204, 197, 197, 0.5);
+            max-width: 350px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            color: rgba(109, 19, 226, 0.932);
+        }
+
+        footer.jumbotron .container {
+            color: rgba(109, 19, 226, 0.932);
+            padding: 60px 0px;
+        }
+
+        footer.jumbotron hr {
+            max-width: 1000px;
+            border: solid 0.8px #f370e8;
+        }
+
+        #bd {
+            /* 只要position不是static或者fixed都可以 */
+            position: absolute;
+            left: 350px;    top: 110px;
+            z-index: 10;
+            background-color: rgb(176, 224, 131, 0.5);
+            box-shadow: -1px -1px 25px 1px rgba(176, 224, 131);
+            border-radius: 50px;
+        }
+    </style>
+
+    <script src="/path/to/skrollr.min.js">
+    </script>
+    <script type="text/javascript">
+        var s = skrollr.init();
+    </script>
+
+</head>
+
+<body onkeydown="moveBD(event)">
+    <img id="bd" src="img/bd.gif">
+
+    <nav class="navbar navbar-expand-lg navbar-success fixed-top " style="background-color: #e3f2fd;">
+        <div id="brand" style=" margin-right: 30px; ">
+            <a class="navbar-brand col-auto mr-auto" href="#">
+                <i class="fas fa-feather-alt" style="font-size:20px;"></i>Flutter簡介
+            </a>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="#area1">引言(INTRO)<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link " href="#area2">簡介 (ABOUT)</a>
+                <a class="nav-item nav-link " href="#area3">主要組成 (COMPOSITION)</a>
+                <a class="nav-item nav-link " href="#area4">發展 (DEVELOP)</a>
+                <a class="nav-item nav-link " href="#area5">未來 (FUTURE)</a>
+            </div>
+        </div>
+    </nav>
+
+    <header style="margin-bottom: -50px;" class=" ">
+        <div class="container">
+            <div class="col-sm-12">
+                <h3></h3>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </header>
+
+    <section id="area1">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1><i class="fas fa-chalkboard-teacher"></i> 引言(INTRO)</h1>
+                    <hr />
+                </div>
+
+                <div class="col-sm-6 img_wrap img">
+                    <a href="https://flutter.dev/" target="_blank">
+                        <img id="img01" class="img-fluid " src="img/obj01.jpg" alt="" />
+                    </a>
+                </div>
+
+                <!-- <div class="col-sm-1"></div> -->
+
+                <div id="txt01" class="col-sm-6" data-0="transform: translateY(55px)" data-10="transform: translateY(0px)">
+                    <br>
+                    <h2>新UI技術之革命</h2>
+                    <hr />
+                    <h4>如果今天有以下幾個假設成立:</h4>
+                    <ul>
+                        <h4>
+                            <li>只需要用一種程式語言+一個框架(或一組套件)即可編寫Web UI。</li>
+                        </h4>
+                        <h4>
+                            <li>用以編寫的程式語言語法與JavaScript或是C語言類似。</li>
+                        </h4>
+                        <h4>
+                            <li>而該框架本身以內建類似Bootstrap與jQuery之功能(簡化)。</li>
+                        </h4>
+                        <br>
+                    </ul>
+                    <h4>........那麼產出一個完整的UI需要花多久呢?</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="area2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1></i> 簡介 (ABOUT):</h1>
+                    <hr />
+                </div>
+
+                <div id="txt02" class="col-sm-6 ">
+                    <br>
+                    <h3 data-bottom-top="transform: translateX(-50px)"
+                        data-center="transform: translateX(0px)" >起源</h3>   
+                    <p data-bottom-top="transform: translateX(-50px)"
+                       data-center="transform: translateX(0px)"> Flutter第一個版本支援Android作業系統，代號為「天空」，並於2015年的Flutter開發者會議上被公布。</p>
+                    <div class="img_wrap img">
+                        <a href="https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/563194/" target="_blank">
+                            <img style="max-height: 330px;" id="img02" class="img-fluid" src="img/obj02.png" alt="" />
+                        </a>
+                    </div>
+                </div>
+
+                <div id="txt03" class="col-sm-6 ">
+                    <br>
+                    <h3 data-bottom-top="transform: translateX(50px)"
+                        data-center="transform: translateX(0px)">主要定位</h3>  
+                    <p data-bottom-top="transform: translateX(50px)"
+                       data-center="transform: translateX(0px)">Flutter是一個由Google開發的開源行動應用軟體開發套件，用於為Android和iOS開發應用，同時也將是Google Fuchsia下開發應用的主要工具。</p>
+                    <div class="img_wrap img">
+                        <a href="https://www.ithome.com.tw/news/129020" target="_blank">
+                            <img style="max-height:330px; " id="img03" class="img-fluid" src="img/obj03.png" alt="" />
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section id="area3">
+        <div class="container-fluid">
+            <div class="row">
+                <div id="txt0" class="col-sm-12">
+                    <h1><i class="fas fa-chalkboard-teacher"></i> 主要組成 (COMPOSITION)：</h1>
+                    <hr />
+                </div>
+
+                <div id="txt04" class="col-sm-5" data-bottom-top="transform: translateX(-50px)"
+                    data-center="transform: translateX(0px)">
+                    <ol>
+                        <h4>
+                            <li>基礎庫</li>
+                        </h4>
+                        <p>Flutter的引擎使用C++開發，通過Google的Skia圖形庫提供底層彩現支援，亦提供平台相關的SDK，例如Android和iOS</p>
+                        <h4>
+                            <li>Skia 2D彩現引擎(Flutter引擎)</li>
+                        </h4>
+                        <p>基礎庫由Dart編寫，提供了用Flutter構建應用所需的基本的類和函式，例如與引擎通訊的API</p>
+                        <h4>
+                            <li>元件</li>
+                        </h4>
+                        <p>Flutter是通過組織、建立不同的元件完成使用者介面設計的。
+                            每個元件代表使用者介面中不可變的一部分；包括文字、多邊形以及動畫在內的所有圖形都是用元件建立的。複雜的元件由簡單的元件結合而成。</p>
+                        <br>
+                    </ol>
+                </div>
+
+                <div class="col-sm-1"></div>
+
+                <div class="col-sm-6 img_wrap img">
+                    <a href="https://www.itread01.com/content/1546602491.html" target="_blank">
+                        <img id="img04" class="img-fluid " src="img/obj04.png " alt="" />
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section id="area4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <h1><i class="fas fa-chalkboard-teacher"></i> 發展 (DEVELOP):</h1>
+                    <hr />
+                </div>
+
+                <div id="txt05-1" class="col-sm-3" data-bottom-top="transform: translateX(-50px)"
+                    data-center="transform: translateX(0px)">
+                    <br>
+                    <h3>客製化風格的元件</h3>
+                    <h3>(行動裝置上)</h3>
+                    <hr />
+                    <ul>
+                        <h5>
+                            <li>Flutter框架包含了兩套符合特定程式語言與系統框架的元件。</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>被稱作Material Design的元件，實現與Android對應的設計。</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>被稱作Cupertino的元件，模仿了蘋果iOS的設計。</li>
+                        </h5>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="img_wrap">
+                        <a href="https://www.itread01.com/content/1546602491.html" target="_blank">
+                            <img id="img05" class="img-fluid" src="img/obj05.png" alt=""
+                                data-bottom-top="filter: grayscale(100%)" data-center="filter: grayscale(0%)" />
+                        </a>
+                    </div>
+                </div>
+
+                <div id="txt05-2" class="col-sm-3" data-bottom-top="transform: translateX(50px)"
+                    data-center="transform: translateX(0px)">
+                    <br>
+                    <h3>web-base方式的實作</h3>
+                    <h3>(前端應用上)</h3>
+                    <hr />
+                    <h5>
+                        <p>(在Hummingbird專案)Flutter 不只有支援原生 ARM Code 而也支援(轉譯) JavaScript。</p>
+                    </h5>
+                    <h5>
+                        <p>未來極有可能以透過 Flutter 直接產生 Web 相關程式碼，開發者不用改寫任何一行程式碼，就可以直接將 Flutter 運行在瀏覽器內。</p>
+                    </h5>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section id="area5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1><i class="fas fa-chalkboard-teacher"></i> 未來 (FUTURE)</h1>
+                    <hr />
+                </div>
+
+                <div id="txt06-1" class="col-sm-3" data-bottom-top="transform: translateX(-50px)"
+                    data-center="transform: translateX(0px)">
+                    <br>
+                    <h3>仍需面對的問題</h3>
+                    <hr />
+                    <ul>
+                        <h5>
+                            <li>國內(ROC)學習資源目前並不豐富，使用Flutter的公司也比較少。</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>相關的生態還沒有React Native那樣豐富。</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>web-base方面之問題同上</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>難以完全迴避原生平臺上的代碼，且效能率低於原生開發(行動裝置上)</li>
+                        </h5>
+                    </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <a href="https://www.dart-china.org/t/topic/1068" target="_blank">
+                        <img id="img06" class="img-fluid" src="img/obj06.png" alt=""
+                            data-bottom-top="filter: grayscale(100%)" data-center="filter: grayscale(0%)" />
+                    </a>
+                </div>
+
+                <div id="txt06-2" class="col-sm-3" data-bottom-top="transform: translateX(50px)"
+                    data-center="transform: translateX(0px)">
+                    <br>
+                    <h3>Flutter的可能性</h3>
+                    <hr />
+                    <ul>
+                        <h5>
+                            <li>為Google Fuchsia系統(新系統)的應用層框架。</li>
+                        </h5>
+                        <br>
+                        <h5>
+                            <li>從早期支持iOS和Android，至web/desktop/鑲入式裝置，雖然目前尚不完善但近幾個月來快速改進</li>
+                        </h5>
+                    </ul>
+                </div>
+            </div>
+    </section>
+
+    <footer class="jumbotron">
+        <div class="container">
+            <h2 data-bottom-top="transform: translateY(-100px);opacity: 0"
+                data-center="transform: translateY(0px);opacity: 1">想了解更多FLUTTER相關嗎?</h2>
+            <br>
+            <form>
+                <!--要判斷一定要form-->
+                <input type="text" class="form-control" placeholder="請輸入您的信箱" pattern="\d+([.-]\d+)*@\d+([.-]\d+)+"
+                    required />
+                <hr />
+                <button class="btn btn-default">送出!!</button>
+            </form>
+        </div>
+    </footer>
+
+    <!-- 返回鍵的HTML -->
+    <i id="gotop" class="far fa-arrow-alt-circle-up "
+        style="font-size:60px; color:blue; position: fixed;  bottom:20px; right:20px;"></i>
+
+
+
+    <script type="text/javascript" src="./jquery.toast.js">
+    </script>
+
+    <script>
+      
+        showToast("您好", "歡迎進入本站!!");
+        function showToast(heading, message) {
+            $.toast({
+                text: message, // Text that is to be shown in the toast
+                textColor: '#F7F6AD',
+                heading: heading, // Optional heading to be shown on the toast
+                icon: 'info', // Type of toast icon
+                showHideTransition: 'fade', // fade, slide or plain
+                allowToastClose: true, // Boolean value true or false
+                hideAfter: 2500, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                textAlign: 'left', // Text alignment i.e. left, right or center
+                loader: false,
+                loaderBg: '#F7F6AD', // Background color of the toast loader              
+            });
+        }
+
+        $("#img01").hover(function () {
+            $("#txt01").css("color", "red");
+            $("#txt01").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt01").css("color", "black");
+            $("#txt01").css("text-shadow", "0px 0px 0px ");
+        });
+
+        $("#img02").hover(function () {
+            $("#txt02").css("color", "red");
+            $("#txt02").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt02").css("color", "black");
+            $("#txt02").css("text-shadow", "0px 0px 0px ");
+
+        });
+
+        $("#img03").hover(function () {
+            $("#txt03").css("color", "red");
+            $("#txt03").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt03").css("color", "black");
+            $("#txt03").css("text-shadow", "0px 0px 0px ");
+        });
+
+        $("#img04").hover(function () {
+            $("#txt04").css("color", "red");
+            $("#txt04").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt04").css("color", "black");
+            $("#txt04").css("text-shadow", "0px 0px 0px ");
+        });
+
+        $("#img05").hover(function () {
+            $("#txt05-1").css("color", "red");
+            $("#txt05-1").css("text-shadow", "2px 2px 3px #53F4E4");
+            $("#txt05-2").css("color", "red");
+            $("#txt05-2").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt05-1").css("color", "black");
+            $("#txt05-1").css("text-shadow", "0px 0px 0px ");
+            $("#txt05-2").css("color", "black");
+            $("#txt05-2").css("text-shadow", "0px 0px 0px ");
+        });
+
+        $("#img06").hover(function () {
+            $("#txt06-1").css("color", "red");
+            $("#txt06-1").css("text-shadow", "2px 2px 3px #53F4E4");
+            $("#txt06-2").css("color", "red");
+            $("#txt06-2").css("text-shadow", "2px 2px 3px #53F4E4");
+        }, function () {
+            $("#txt06-1").css("color", "black");
+            $("#txt06-1").css("text-shadow", "0px 0px 0px ");
+            $("#txt06-2").css("color", "black");
+            $("#txt06-2").css("text-shadow", "0px 0px 0px ");
+        });
+
+
+        //返回最上方紐的JS
+        $("#gotop").click(function () {
+            console.log("click");
+            $("html, body").animate({
+                scrollTop: 0
+            }, 900);
+        });
+
+
+
+        // GIF圖片移動
+        var bd = document.getElementById('bd');
+
+        function moveBD(e) {
+            console.log(e)
+
+            var bdStyle = window.getComputedStyle(bd);
+            var bdTop = bdStyle.getPropertyValue('top');
+            var bdLeft = bdStyle.getPropertyValue('left');
+            console.log(bdTop);
+            console.log(bdLeft);
+
+            switch (e.keyCode) {
+                case 37:
+                    console.log('左');
+                    bd.style.left = parseInt(bdLeft) - 50 + "px";
+                    bd.style.transform = "rotateY(0deg)";
+                    break;
+                case 38:
+                    console.log('上');
+                    bd.style.top = parseInt(bdTop) - 50 + "px";
+                    bd.style.transform = "rotateX(180deg)";
+                    break;
+                case 39:
+                    console.log('右');
+                    bd.style.left = parseInt(bdLeft) + 50 + "px";
+                    bd.style.transform = "rotateY(180deg)";
+                    break;
+                case 40:
+                    console.log('下');
+                    bd.style.top = parseInt(bdTop) + 50 + "px";
+                    bd.style.transform = "rotateX(0deg)";
+                    break;
+            }
+
+            //控制範圍+超出下界就回原點          
+            if (parseInt(bd.style.left) < 0) {
+                bd.style.left = 0 + "px";
+            } else if (parseInt(bd.style.left) > 1150) {
+                bd.style.left = 1200 + "px";
+            } else if (parseInt(bd.style.top) < 0) {
+                bd.style.top = 120 + "px";
+            } else if (parseInt(bd.style.top) > 2900) {
+                bd.style.left = 350 + "px";
+                bd.style.top = 140 + "px";
+            }
+
+            // if (bd.style.left < 0+"px") {
+            //     bd.style.left = 0 + "px";                
+            //     console.log(bd.style.left < 0+"px");
+            // }
+        }
+          
+    </script>
+
+    <!-- skrollr啟動關鍵 -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/skrollr/0.6.30/skrollr.min.js'>
+    </script>
+    <script>
+        var s = skrollr.init();
+    </script>
+
+</body>
+
+
+
+
+</html>
